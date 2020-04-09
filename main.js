@@ -27,7 +27,7 @@ function searchMeal(e) {
 
                 if (data.meals === null) {
                     resultHeading.innerHTML = `
-                    <p>There are no searfch results. Try again!</p>
+                    <p>There are no search results. Try again!</p>
                     `;
                 } else {
                     mealsElement.innerHTML = data.meals.map(meal => `
@@ -59,6 +59,21 @@ function getMealById(mealID) {
         });
 }
 
+// Fetch a random meal
+function getRandomMeal() {
+    // Clear meals and heading
+    mealsElement.innerHTML = '';
+    resultHeading.innerHTML = '';
+
+    fetch('https://www.themealdb.com/api/json/v1/1/random.php')
+        .then(res => res.json())
+        .then(data => {
+            const meal = data.meals[0];
+
+            addMealToDOM(meal);
+        })
+}
+
 
 // Add meal to DOM
 function addMealToDOM(meal) {
@@ -74,7 +89,7 @@ function addMealToDOM(meal) {
 
 
     singleMealElement.innerHTML = `
-        <div class="singe-meal">
+        <div class="single-meal">
             <h1>${meal.strMeal}</h1>
             <img src="${meal.strMealThumb}" alt="${meal.strMeal}" />
             <div class="single-meal-info">
@@ -86,7 +101,7 @@ function addMealToDOM(meal) {
                     <h2>Ingredients</h2>
                     
                     <ul>
-                        ${ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        ${ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
                     </ul>
                 </div>
         </div>
@@ -96,6 +111,7 @@ function addMealToDOM(meal) {
 
 // Event Listener
 submit.addEventListener('submit', searchMeal);
+random.addEventListener('click', getRandomMeal);
 
 mealsElement.addEventListener('click', e => {
     const mealInfo = e.path.find(item => {
